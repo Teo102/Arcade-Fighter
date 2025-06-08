@@ -1,8 +1,8 @@
 // js/game/entities/Fighter.js
 
-import { GRAVITY, GROUND_Y, FIGHTER_STATE, MAX_HEALTH, SPRITE_SCALE } from '../config.js';
-import { getAsset } from '../assets.js';
-import { FIGHTERS_DATA } from '../data/fightersData.js'; // Importer les données des combattants
+import { GRAVITY, GROUND_Y, FIGHTER_STATE, MAX_HEALTH, SPRITE_SCALE } from './config.js';
+import { getAsset } from './assets.js';
+import { FIGHTERS_DATA } from './fightersdata.js'; // Importer les données des combattants
 
 /**
  * Gère l'animation d'un combattant à partir de ses images individuelles.

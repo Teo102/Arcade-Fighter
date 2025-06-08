@@ -34,7 +34,7 @@ export const CONTROLS = {
 
 // Chemins des assets globaux
 export const ASSET_PATHS = {
-    BACKGROUND_DOJO: 'assets/images/backgrounds/dojo.png', // Chemin sans slashs pour les fichiers
+    BACKGROUND_DOJO: './dojo.png', // Chemin direct vers l'image de fond
 };
 
 // Échelle par défaut des sprites (important pour le rendu, même si les frames sont individuelles)

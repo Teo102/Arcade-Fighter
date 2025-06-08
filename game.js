@@ -1,12 +1,12 @@
 // js/game/game.js
 
 import { GAME_WIDTH, GAME_HEIGHT, GROUND_Y, FIGHTER_STATE } from './config.js';
-import { Player } from './entities/Player.js';
-import { Hud } from './ui/Hud.js';
+import { Player } from './Player.js';
+import { Hud } from './Hud.js';
 import { loadAllAssets, getAsset } from './assets.js';
-import { resetInputForNewFrame } from './utils/input.js';
-import { checkCollision } from './utils/collision.js';
-import { FIGHTERS_DATA } from './data/fightersData.js';
+import { resetInputForNewFrame } from './input.js';
+import { checkCollision } from './collision.js';
+import { FIGHTERS_DATA } from './fightersdata.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
