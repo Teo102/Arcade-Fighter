@@ -1,6 +1,6 @@
 // js/game/entities/Character.js
-import { SpriteAnimator } from '../utils/animation.js';
-import { GRAVITY, MAX_HEALTH } from '../config.js';
+import { SpriteAnimator } from './animation.js';
+import { GRAVITY, MAX_HEALTH } from './config.js';
 
 /**
  * Classe de base pour tous les personnages du jeu.

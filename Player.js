@@ -1,8 +1,8 @@
 // js/game/entities/Player.js
 
 import { Fighter } from './Fighter.js';
-import { isKeyPressed, wasKeyJustPressed } from '../utils/input.js';
-import { CONTROLS, FIGHTER_STATE } from '../config.js';
+import { isKeyPressed, wasKeyJustPressed } from './input.js';
+import { CONTROLS, FIGHTER_STATE } from './config.js';
 
 export class Player extends Fighter {
     constructor(fighterId, x, y, isPlayer1 = true) {

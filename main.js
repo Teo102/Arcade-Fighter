@@ -1,7 +1,7 @@
 // js/game/game.js
 import { GAME_WIDTH, GAME_HEIGHT, PLAYER_SPRITE_CONFIG } from './config.js';
-import { Player } from './entities/Player.js';
-import { Hud } from './ui/Hud.js';
+import { Player } from './Player.js';
+import { Hud } from './Hud.js';
 import { loadAllAssets, getAsset } from './assets.js';
 
 const canvas = document.getElementById('gameCanvas');
