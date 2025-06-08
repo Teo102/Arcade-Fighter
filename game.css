@@ -1,0 +1,152 @@
+/* css/game.css */
+
+/* Importation des variables globales pour la cohérence */
+@import url('main.css');
+
+#game-container {
+    position: relative;
+    width: 1280px; /* Taille fixe pour le canvas de base */
+    height: 720px;
+    background-color: black; /* Fond noir derrière le canvas */
+    overflow: hidden;
+    border: 10px outset var(--border-color); /* Bordure épaisse pour l'effet borne */
+    box-shadow: 
+        0 0 30px rgba(0, 0, 0, 0.8), /* Ombre extérieure forte */
+        inset 0 0 20px rgba(0, 0, 0, 0.5); /* Ombre intérieure pour un effet de profondeur */
+    margin: 20px auto;
+    border-radius: 8px; /* Léger arrondi des coins */
+    z-index: 1; /* S'assure qu'il est en dessous du scanline body */
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Effet léger de grain ou de bruit sur le canvas pour le rendre moins "propre" */
+    filter: saturate(1.1) contrast(1.1);
+}
+
+/* HUD Styling - Design Arcade Classique */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120px; /* Hauteur légèrement augmentée pour plus de détails */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%); /* Fond dégradé semi-transparent */
+    border-bottom: 3px solid var(--border-color); /* Bordure inférieure nette */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.player-hud {
+    display: flex;
+    align-items: center;
+    width: 45%;
+}
+
+.player-1-hud {
+    flex-direction: row;
+}
+
+.player-2-hud {
+    flex-direction: row-reverse;
+}
+
+.character-portrait {
+    width: 90px; /* Légèrement plus grand */
+    height: 90px;
+    background-color: var(--background-dark); /* Couleur neutre */
+    border: 4px solid var(--primary-color); /* Bordure dorée épaisse */
+    border-radius: 50%;
+    margin: 0 20px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 15px var(--accent-color-1); /* Lumière autour du portrait */
+    animation: pulseBorder 2s infinite alternate; /* Effet de pulsation */
+}
+
+/* Animation pour les portraits */
+@keyframes pulseBorder {
+    from { border-color: var(--primary-color); box-shadow: 0 0 15px var(--accent-color-1); }
+    to { border-color: var(--accent-color-1); box-shadow: 0 0 25px var(--primary-color); }
+}
+
+
+.health-bar-container,
+.energy-bar-container {
+    width: 100%;
+    height: 30px; /* Plus épais pour la visibilité */
+    background-color: rgba(0, 0, 0, 0.7); /* Fond plus sombre */
+    border: 2px solid var(--text-light); /* Bordure lumineuse */
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.8); /* Ombre interne */
+}
+
+.health-bar {
+    height: 100%;
+    width: 100%;
+    background-color: #00FF00; /* Vert vif par défaut */
+    transition: width 0.3s ease-out, background-color 0.3s ease; /* Transition douce */
+    position: relative; /* Pour le motif de la barre */
+}
+
+/* Effet de texture sur la barre de vie */
+.health-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.1) 0px,
+        rgba(255, 255, 255, 0.1) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+}
+
+.energy-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #FFD700; /* Jaune doré pour l'énergie */
+    transition: width 0.3s ease-out;
+}
+
+/* Specific player bar colors (gérées par JS dans le code, mais les voici pour référence) */
+.player-1-health { /* Vert pour P1 */ }
+.player-2-health { /* Rouge pour P2 */ }
+
+
+.timer {
+    font-family: var(--font-display);
+    font-size: 4em; /* Plus grand et percutant */
+    color: var(--primary-color);
+    text-shadow: 
+        3px 3px 0 var(--secondary-color),
+        -2px -2px 0 var(--text-light); /* Effet néon */
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: 3px solid var(--accent-color-1);
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.6); /* Lumière rougeoyante */
+}
+
+
+/* Responsive Scaling for the game-container (identique, mais assure la cohérence) */
+@media (max-width: 1300px) {
+    #game-container {
+        width: 90vw;
+        height: calc(90vw / (16/9));
+        max-width: 1280px;
+        max-height: 720px;
+    }
+}
