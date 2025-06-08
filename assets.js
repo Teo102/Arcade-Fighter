@@ -1,6 +1,6 @@
 // js/game/assets.js
 import { ASSET_PATHS } from './config.js';
-import { FIGHTERS_DATA } from './data/fightersData.js';
+import { FIGHTERS_DATA } from './fightersdata.js';
 
 const assets = {};
 let assetsLoadedCount = 0;
