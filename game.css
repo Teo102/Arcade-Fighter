@@ -140,6 +140,21 @@
     box-shadow: 0 0 15px rgba(255, 69, 0, 0.6); /* Lumière rougeoyante */
 }
 
+/* Message central pour les annonces de round/KO */
+.round-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    font-family: var(--font-display);
+    font-size: 3.5em;
+    color: var(--accent-color-1);
+    text-shadow: 3px 3px 0 var(--secondary-color);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
 
 /* Responsive Scaling for the game-container (identique, mais assure la cohérence) */
 @media (max-width: 1300px) {
