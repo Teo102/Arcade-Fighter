@@ -1,8 +1,38 @@
 // js/game/entities/Fighter.js
 
-import { GRAVITY, GROUND_Y, GAME_WIDTH, FIGHTER_STATE, MAX_HEALTH, ATTACK_COOLDOWN_MS } from './config.js';
+import { GRAVITY, GROUND_Y, GAME_WIDTH, FIGHTER_STATE, MAX_HEALTH, ATTACK_COOLDOWN_MS, DEBUG_OPTIONS } from './config.js';
 import { getAsset } from './assets.js';
 import { FIGHTERS_DATA } from './fightersdata.js'; // Importer les données des combattants
+
+const DEFAULT_ATTACK_HITBOX_CONFIG = {
+    [FIGHTER_STATE.ATTACK_LIGHT]: {
+        widthFactor: 0.35,
+        heightFactor: 0.3,
+        offsetXFactor: 0.55,
+        offsetYFactor: 0.45,
+        damage: 6,
+        startFrame: 0,
+        endFrame: Number.POSITIVE_INFINITY,
+    },
+    [FIGHTER_STATE.ATTACK_MEDIUM]: {
+        widthFactor: 0.45,
+        heightFactor: 0.35,
+        offsetXFactor: 0.52,
+        offsetYFactor: 0.38,
+        damage: 10,
+        startFrame: 0,
+        endFrame: Number.POSITIVE_INFINITY,
+    },
+    [FIGHTER_STATE.ATTACK_HEAVY]: {
+        widthFactor: 0.55,
+        heightFactor: 0.45,
+        offsetXFactor: 0.5,
+        offsetYFactor: 0.3,
+        damage: 14,
+        startFrame: 0,
+        endFrame: Number.POSITIVE_INFINITY,
+    },
+};
 
 /**
  * Gère l'animation d'un combattant à partir de ses images individuelles.
@@ -204,20 +234,18 @@ export class Fighter {
                 // Met à jour la position de la hitbox d'attaque par rapport au personnage
                 const animData = this.data.animations[this.state];
                 const frameIndex = this.animator.currentFrame;
-                const hitboxData = animData.hitboxes ? animData.hitboxes.find(hb => hb.frame === frameIndex) : null;
+                let hitboxData = null;
+
+                if (animData && animData.hitboxes) {
+                    hitboxData = animData.hitboxes.find(hb => hb.frame === frameIndex) || null;
+                }
 
                 if (hitboxData) {
                     // Calcul de la position de la hitbox en tenant compte du flip
                     let hbX = this.x;
-                    // L'origine des coordonnées de la hitbox est toujours relative au coin supérieur gauche du sprite non-flipé.
-                    // Si le sprite est flipé, l'image est inversée, mais la logique de la hitbox reste la même,
-                    // sauf que sa position sur l'axe X doit être calculée par rapport au côté "droit" du sprite,
-                    // qui devient le "gauche" après flip.
                     if (this.animator.facingRight) {
                         hbX += hitboxData.x * this.data.scale;
                     } else {
-                        // Si flipé, la hitbox est miroir par rapport au côté droit du sprite
-                        // Calcul: position du coin gauche du sprite + (largeur originale du sprite - (offset X de la hitbox + largeur de la hitbox)) * scale
                         hbX += (this.originalWidth - (hitboxData.x + hitboxData.width)) * this.data.scale;
                     }
                     this.currentAttackHitbox = {
@@ -228,7 +256,24 @@ export class Fighter {
                         damage: hitboxData.damage
                     };
                 } else {
-                    this.currentAttackHitbox = null; // Pas de hitbox sur cette frame
+                    const fallback = DEFAULT_ATTACK_HITBOX_CONFIG[this.state];
+                    if (fallback && frameIndex >= fallback.startFrame && frameIndex <= fallback.endFrame) {
+                        const hbWidth = this.width * fallback.widthFactor;
+                        const hbHeight = this.height * fallback.heightFactor;
+                        const hbY = this.y + this.height * fallback.offsetYFactor;
+                        const startRight = this.x + this.width * fallback.offsetXFactor;
+                        const startLeft = this.x + this.width * (1 - fallback.offsetXFactor - fallback.widthFactor);
+                        const hbX = this.animator.facingRight ? startRight : startLeft;
+                        this.currentAttackHitbox = {
+                            x: hbX,
+                            y: hbY,
+                            width: hbWidth,
+                            height: hbHeight,
+                            damage: fallback.damage,
+                        };
+                    } else {
+                        this.currentAttackHitbox = null; // Pas de hitbox sur cette frame
+                    }
                 }
             }
         }
@@ -241,16 +286,18 @@ export class Fighter {
     draw(ctx) {
         this.animator.draw(ctx, this.x, this.y, this.width, this.height);
 
-        // DEBUG: Dessiner la hurtbox (en bleu)
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(this.hurtbox.x, this.hurtbox.y, this.hurtbox.width, this.hurtbox.height);
-
-        // DEBUG: Dessiner la hitbox d'attaque (en rouge)
-        if (this.currentAttackHitbox) {
-            ctx.strokeStyle = 'red';
+        if (DEBUG_OPTIONS.showHitboxes) {
+            // DEBUG: Dessiner la hurtbox (en bleu)
+            ctx.strokeStyle = 'blue';
             ctx.lineWidth = 2;
-            ctx.strokeRect(this.currentAttackHitbox.x, this.currentAttackHitbox.y, this.currentAttackHitbox.width, this.currentAttackHitbox.height);
+            ctx.strokeRect(this.hurtbox.x, this.hurtbox.y, this.hurtbox.width, this.hurtbox.height);
+
+            // DEBUG: Dessiner la hitbox d'attaque (en rouge)
+            if (this.currentAttackHitbox) {
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.currentAttackHitbox.x, this.currentAttackHitbox.y, this.currentAttackHitbox.width, this.currentAttackHitbox.height);
+            }
         }
     }
 

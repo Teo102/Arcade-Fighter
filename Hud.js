@@ -15,6 +15,7 @@ export class Hud {
         this.roundDisplay = document.createElement('div'); // Pour "Round 1 Fight!"
         this.roundDisplay.className = 'round-message';
         document.getElementById('hud').appendChild(this.roundDisplay);
+        this.messageTimeout = null;
     }
 
     /**
@@ -65,11 +66,16 @@ export class Hud {
     showMessage(message, durationMs = 1500) {
         this.roundDisplay.textContent = message;
         this.roundDisplay.style.opacity = '1';
-        this.roundDisplay.style.transform = 'scale(1)';
+        this.roundDisplay.style.transform = 'translate(-50%, -50%) scale(1)';
 
-        setTimeout(() => {
+        if (this.messageTimeout) {
+            clearTimeout(this.messageTimeout);
+        }
+
+        this.messageTimeout = setTimeout(() => {
             this.roundDisplay.style.opacity = '0';
-            this.roundDisplay.style.transform = 'scale(0.8)';
+            this.roundDisplay.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            this.messageTimeout = null;
         }, durationMs);
     }
 }

@@ -31,7 +31,8 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    overflow: hidden; /* Empêche les barres de défilement */
+    overflow-x: hidden;
+    overflow-y: auto; /* Autorise le scroll vertical si le contenu dépasse */
     position: relative; /* Pour les éléments décoratifs */
 }
 

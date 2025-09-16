@@ -2,7 +2,9 @@
 
 export const GAME_WIDTH = 1280;
 export const GAME_HEIGHT = 720;
-export const GROUND_Y = 500; // Position Y du sol, où les personnages atterrissent
+// Position Y du sol, où les personnages atterrissent. On le rapproche du bas
+// de l'écran pour laisser plus d'espace d'affichage au dessus des combattants.
+export const GROUND_Y = GAME_HEIGHT - 100;
 export const GRAVITY = 0.8; // Force de gravité
 export const MAX_HEALTH = 100;
 export const ATTACK_COOLDOWN_MS = 300; // Temps de récupération après une attaque
@@ -38,7 +40,13 @@ export const ASSET_PATHS = {
 };
 
 // Échelle par défaut des sprites (important pour le rendu, même si les frames sont individuelles)
-export const SPRITE_SCALE = 2; // Pour doubler la taille des sprites sur le canvas
+// Taille de rendu des sprites. Les assets sources sont très grands (1024px+),
+// on les réduit donc pour tenir confortablement dans l'arène.
+export const SPRITE_SCALE = 0.35;
+
+export const DEBUG_OPTIONS = {
+    showHitboxes: false, // Passez à true pour déboguer visuellement les hitboxes
+};
 
 // Types d'états et d'animations
 export const FIGHTER_STATE = {
