@@ -34,27 +34,32 @@ function loadImage(name, path) {
  * @returns {Promise<void>} Promesse résolue quand tout est chargé.
  */
 export async function loadAllAssets() {
-    const assetPromises = [];
+    assetsLoadedCount = 0;
+    const assetEntries = new Map();
 
-    // Ajouter le background
-    assetPromises.push(loadImage('backgroundDojo', ASSET_PATHS.BACKGROUND_DOJO));
+    if (ASSET_PATHS.BACKGROUND_DOJO) {
+        assetEntries.set('backgroundDojo', ASSET_PATHS.BACKGROUND_DOJO);
+    }
 
-    // Ajouter les frames d'animation pour chaque personnage
+    // Ajouter les frames d'animation pour chaque personnage (évite les doublons)
     for (const fighterId in FIGHTERS_DATA) {
         const fighter = FIGHTERS_DATA[fighterId];
         for (const animName in fighter.animations) {
             const animation = fighter.animations[animName];
             for (const framePath of animation.frames) {
-                // Le nom de l'asset sera le chemin lui-même pour une identification unique
-                assetPromises.push(loadImage(framePath, framePath));
+                if (!assetEntries.has(framePath)) {
+                    assetEntries.set(framePath, framePath);
+                }
             }
         }
     }
 
-    totalAssetsToLoad = assetPromises.length;
+    totalAssetsToLoad = assetEntries.size;
     console.log(`Total assets to load: ${totalAssetsToLoad}`);
 
-    await Promise.all(assetPromises);
+    const loadPromises = Array.from(assetEntries.entries()).map(([name, path]) => loadImage(name, path));
+
+    await Promise.all(loadPromises);
     console.log('All assets loaded!');
 }
 

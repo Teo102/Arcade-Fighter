@@ -6,7 +6,6 @@ import { Hud } from './Hud.js';
 import { loadAllAssets, getAsset } from './assets.js';
 import { resetInputForNewFrame } from './input.js';
 import { checkCollision } from './collision.js';
-import { FIGHTERS_DATA } from './fightersdata.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -22,6 +21,20 @@ let lastTime = 0;
 let gameTimer = 99; // Compteur de temps pour le round
 let roundActive = false; // Indique si le round est en cours
 let gameEnded = false; // Indique si le jeu est terminé (KO)
+const PLAYER_SPAWN_OFFSET = 200;
+
+function resetFighterPositions() {
+    player1.x = PLAYER_SPAWN_OFFSET;
+    player2.x = Math.max(GAME_WIDTH - PLAYER_SPAWN_OFFSET - player2.width, 0);
+    player1.y = GROUND_Y - player1.height;
+    player2.y = GROUND_Y - player2.height;
+    player1.velocityX = 0;
+    player2.velocityX = 0;
+    player1.velocityY = 0;
+    player2.velocityY = 0;
+    player1.animator.facingRight = true;
+    player2.animator.facingRight = false;
+}
 
 /**
  * Initialise le jeu : charge les assets, crée les personnages et le HUD.
@@ -39,9 +52,8 @@ async function startGame() {
     }
 
     // Création des joueurs
-    // Utilisez les IDs de fightersData.js pour choisir les personnages
-    player1 = new Player('ken', 200, GROUND_Y, true);
-    player2 = new Player('ryu', GAME_WIDTH - 200, GROUND_Y, false); // Adjusted initial X for player 2
+    player1 = new Player('ken', PLAYER_SPAWN_OFFSET, GROUND_Y, true);
+    player2 = new Player('ryu', GAME_WIDTH - PLAYER_SPAWN_OFFSET, GROUND_Y, false);
 
     hud = new Hud();
 
@@ -61,16 +73,22 @@ function startRound() {
     gameTimer = 99; // Réinitialise le timer
     player1.health = player1.maxHealth; // Réinitialise la vie
     player2.health = player2.maxHealth;
-    player1.x = 200; // Réinitialise la position
-    player2.x = GAME_WIDTH - 200;
-    player1.y = GROUND_Y - player1.height;
-    player2.y = GROUND_Y - player2.height;
-    player1.velocityY = 0; player1.velocityX = 0;
-    player2.velocityY = 0; player2.velocityX = 0;
+    resetFighterPositions();
+    player1.isOnGround = true;
+    player2.isOnGround = true;
+    if (player1.doubleJumpAvailable !== undefined) player1.doubleJumpAvailable = true;
+    if (player2.doubleJumpAvailable !== undefined) player2.doubleJumpAvailable = true;
     player1.state = FIGHTER_STATE.IDLE; // Réinitialise l'état
     player2.state = FIGHTER_STATE.IDLE;
+    player1.animator.setAnimation(FIGHTER_STATE.IDLE);
+    player2.animator.setAnimation(FIGHTER_STATE.IDLE);
     player1.isAttacking = false; player1.attackCooldownTimer = 0;
     player2.isAttacking = false; player2.attackCooldownTimer = 0;
+    player1.hitThisAttack = false;
+    player2.hitThisAttack = false;
+
+    hud.updateHealthBars(player1.health, player1.maxHealth, player2.health, player2.maxHealth);
+    hud.updateTimer(gameTimer);
 
 
     hud.showMessage("ROUND 1! FIGHT!", 2000); // Affiche le message de début de round
@@ -85,15 +103,13 @@ function gameLoop(currentTime) {
     const deltaTime = currentTime - lastTime; // Temps écoulé depuis la dernière frame en ms
     lastTime = currentTime;
 
-    resetInputForNewFrame(); // Réinitialise les inputs 'just pressed' pour cette frame
-
     if (roundActive && !gameEnded) {
         update(deltaTime);
-        draw();
-    } else if (gameEnded) {
-        draw(); // On continue de dessiner la dernière frame après la fin du jeu
-        // Afficher l'écran de victoire/défaite
     }
+
+    draw();
+
+    resetInputForNewFrame(); // Réinitialise les inputs 'just pressed' pour la prochaine frame
 
     requestAnimationFrame(gameLoop); // Rappeler la boucle pour la prochaine frame
 }
@@ -150,6 +166,7 @@ function update(deltaTimeMs) {
  * Détermine le gagnant si le temps est écoulé.
  */
 function determineWinnerByTime() {
+    gameEnded = true;
     if (player1.health > player2.health) {
         hud.showMessage("Player 1 Wins by Time!", 3000);
     } else if (player2.health > player1.health) {

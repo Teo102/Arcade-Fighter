@@ -4,8 +4,17 @@ const keys = {}; // Stocke l'état des touches (pressé/relâché)
 const pressedThisFrame = {}; // Touches pressées spécifiquement à la frame actuelle
 const releasedThisFrame = {}; // Touches relâchées spécifiquement à la frame actuelle
 
+const CONTROL_KEYS = new Set([
+    'KeyA', 'KeyD', 'KeyW', 'KeyJ', 'KeyK', 'KeyL', 'KeyE', 'KeyQ',
+    'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+    'Numpad7', 'Numpad8', 'Numpad9', 'Numpad5', 'Numpad4'
+]);
+
 // Listener pour la pression des touches
 window.addEventListener('keydown', (e) => {
+    if (CONTROL_KEYS.has(e.code)) {
+        e.preventDefault();
+    }
     if (!keys[e.code]) { // Si la touche n'était pas déjà pressée
         keys[e.code] = true;
         pressedThisFrame[e.code] = true;
@@ -14,6 +23,9 @@ window.addEventListener('keydown', (e) => {
 
 // Listener pour le relâchement des touches
 window.addEventListener('keyup', (e) => {
+    if (CONTROL_KEYS.has(e.code)) {
+        e.preventDefault();
+    }
     if (keys[e.code]) { // Si la touche était pressée
         keys[e.code] = false;
         releasedThisFrame[e.code] = true;
