@@ -1,6 +1,6 @@
 // js/game/entities/Fighter.js
 
-import { GRAVITY, GROUND_Y, FIGHTER_STATE, MAX_HEALTH, SPRITE_SCALE } from './config.js';
+import { GRAVITY, GROUND_Y, GAME_WIDTH, FIGHTER_STATE, MAX_HEALTH, ATTACK_COOLDOWN_MS } from './config.js';
 import { getAsset } from './assets.js';
 import { FIGHTERS_DATA } from './fightersdata.js'; // Importer les données des combattants
 
