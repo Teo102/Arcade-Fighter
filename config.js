@@ -10,6 +10,13 @@ export const MAX_HEALTH = 100;
 export const ATTACK_COOLDOWN_MS = 300; // Temps de récupération après une attaque
 export const INPUT_BUFFER_TIME_MS = 150; // Temps pour buffer les inputs de combos
 
+// Valeurs de dégâts de base pour chaque type d'attaque
+export const ATTACK_DAMAGE = {
+    LIGHT: 6,
+    MEDIUM: 10,
+    HEAVY: 14,
+};
+
 // Configuration des touches pour les deux joueurs
 export const CONTROLS = {
     PLAYER1: {

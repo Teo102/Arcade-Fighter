@@ -8,32 +8,68 @@
     <link rel="stylesheet" href="game.css">
 </head>
 <body>
-    <div id="game-container">
-        <div id="hud">
-            <div class="player-hud player-1-hud">
-                <div class="health-bar-container">
-                    <div class="health-bar player-1-health"></div>
+    <main class="game-layout">
+        <div id="game-container">
+            <div id="hud">
+                <div class="player-hud player-1-hud">
+                    <div class="health-bar-container">
+                        <div class="health-bar player-1-health"></div>
+                    </div>
+                    <div class="character-portrait player-1-portrait"></div>
+                    <div class="energy-bar-container">
+                        <div class="energy-bar player-1-energy"></div>
+                    </div>
                 </div>
-                <div class="character-portrait player-1-portrait"></div>
-                <div class="energy-bar-container">
-                    <div class="energy-bar player-1-energy"></div>
+
+                <div class="timer">99</div>
+                <div class="player-hud player-2-hud">
+                    <div class="health-bar-container">
+                        <div class="health-bar player-2-health"></div>
+                    </div>
+                    <div class="character-portrait player-2-portrait"></div>
+                    <div class="energy-bar-container">
+                        <div class="energy-bar player-2-energy"></div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="timer">99</div>
-            <div class="player-hud player-2-hud">
-                <div class="health-bar-container">
-                    <div class="health-bar player-2-health"></div>
-                </div>
-                <div class="character-portrait player-2-portrait"></div>
-                <div class="energy-bar-container">
-                    <div class="energy-bar player-2-energy"></div>
-                </div>
-            </div>
+
+            <canvas id="gameCanvas"></canvas>
         </div>
-        
-        <canvas id="gameCanvas"></canvas>
-    </div>
+
+        <aside class="controls-panel">
+            <h2>Commandes</h2>
+            <div class="controls-panel__columns">
+                <div class="controls-panel__column">
+                    <h3>Joueur 1</h3>
+                    <ul class="controls-list">
+                        <li><span class="keycap">A / D</span><span class="action">Se déplacer</span></li>
+                        <li><span class="keycap">W</span><span class="action">Sauter</span></li>
+                        <li><span class="keycap">J</span><span class="action">Attaque légère <span class="damage" data-attack-damage="light"></span></span></li>
+                        <li><span class="keycap">K</span><span class="action">Attaque moyenne <span class="damage" data-attack-damage="medium"></span></span></li>
+                        <li><span class="keycap">L</span><span class="action">Attaque lourde <span class="damage" data-attack-damage="heavy"></span></span></li>
+                        <li><span class="keycap">Q</span><span class="action">Roulade défensive</span></li>
+                        <li><span class="keycap">E</span><span class="action">Dash offensif</span></li>
+                    </ul>
+                </div>
+                <div class="controls-panel__column">
+                    <h3>Joueur 2</h3>
+                    <ul class="controls-list">
+                        <li><span class="keycap">&larr; / &rarr;</span><span class="action">Se déplacer</span></li>
+                        <li><span class="keycap">&uarr;</span><span class="action">Sauter</span></li>
+                        <li><span class="keycap">7 (Num)</span><span class="action">Attaque légère <span class="damage" data-attack-damage="light"></span></span></li>
+                        <li><span class="keycap">8 (Num)</span><span class="action">Attaque moyenne <span class="damage" data-attack-damage="medium"></span></span></li>
+                        <li><span class="keycap">9 (Num)</span><span class="action">Attaque lourde <span class="damage" data-attack-damage="heavy"></span></span></li>
+                        <li><span class="keycap">4 (Num)</span><span class="action">Roulade défensive</span></li>
+                        <li><span class="keycap">5 (Num)</span><span class="action">Dash offensif</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="controls-buttons">
+                <a href="index.html" class="control-button">Accueil</a>
+                <button type="button" id="restart-button" class="control-button control-button--primary">Relancer le round</button>
+            </div>
+        </aside>
+    </main>
 
     <script type="module" src="game.js"></script>
 </body>
