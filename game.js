@@ -1,6 +1,6 @@
 // js/game/game.js
 
-import { GAME_WIDTH, GAME_HEIGHT, GROUND_Y, FIGHTER_STATE } from './config.js';
+import { GAME_WIDTH, GAME_HEIGHT, GROUND_Y, FIGHTER_STATE, ATTACK_DAMAGE } from './config.js';
 import { Player } from './Player.js';
 import { Hud } from './Hud.js';
 import { loadAllAssets, getAsset } from './assets.js';
@@ -9,6 +9,9 @@ import { checkCollision } from './collision.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+
+const restartButton = document.getElementById('restart-button');
+const attackDamageBadges = document.querySelectorAll('[data-attack-damage]');
 
 // Ajuste la taille du canvas pour correspondre aux dimensions du jeu
 canvas.width = GAME_WIDTH;
@@ -22,6 +25,29 @@ let gameTimer = 99; // Compteur de temps pour le round
 let roundActive = false; // Indique si le round est en cours
 let gameEnded = false; // Indique si le jeu est terminé (KO)
 const PLAYER_SPAWN_OFFSET = 200;
+let roundResetTimeoutId = null;
+
+function updateDamageHints() {
+    attackDamageBadges.forEach((badge) => {
+        const type = badge.dataset.attackDamage;
+        if (!type) return;
+        const damageValue = ATTACK_DAMAGE[type.toUpperCase()];
+        if (typeof damageValue === 'number') {
+            badge.textContent = `-${damageValue} PV`;
+        }
+    });
+}
+
+updateDamageHints();
+
+if (restartButton) {
+    restartButton.addEventListener('click', () => {
+        if (!player1 || !player2 || !hud) {
+            return;
+        }
+        startRound({ manualRestart: true });
+    });
+}
 
 function resetFighterPositions() {
     player1.x = PLAYER_SPAWN_OFFSET;
@@ -67,7 +93,13 @@ async function startGame() {
 /**
  * Gère le début d'un nouveau round.
  */
-function startRound() {
+function startRound(options = {}) {
+    if (roundResetTimeoutId) {
+        clearTimeout(roundResetTimeoutId);
+        roundResetTimeoutId = null;
+    }
+
+    const { manualRestart = false } = options;
     gameEnded = false;
     roundActive = true;
     gameTimer = 99; // Réinitialise le timer
@@ -90,9 +122,9 @@ function startRound() {
     hud.updateHealthBars(player1.health, player1.maxHealth, player2.health, player2.maxHealth);
     hud.updateTimer(gameTimer);
 
-
-    hud.showMessage("ROUND 1! FIGHT!", 2000); // Affiche le message de début de round
-    console.log("Round started!");
+    const startMessage = manualRestart ? "Revanche ! FIGHT !" : "Prêt ? FIGHT !";
+    hud.showMessage(startMessage, 2000); // Affiche le message de début de round
+    console.log(manualRestart ? "Round restarted!" : "Round started!");
 }
 
 /**
@@ -174,7 +206,7 @@ function determineWinnerByTime() {
     } else {
         hud.showMessage("DRAW!", 3000); // Égalité si même vie restante
     }
-    setTimeout(startRound, 4000); // Redémarre un round après un délai
+    roundResetTimeoutId = setTimeout(() => startRound(), 4000); // Redémarre un round après un délai
 }
 
 /**
@@ -193,7 +225,7 @@ function handleRoundEnd() {
         console.log("Player 1 Wins!");
     }
     // TODO: Ajouter la logique pour les rounds gagnés (win count)
-    setTimeout(startRound, 4000); // Redémarre un round après un délai
+    roundResetTimeoutId = setTimeout(() => startRound(), 4000); // Redémarre un round après un délai
 }
 
 /**

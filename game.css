@@ -18,6 +18,7 @@
     margin: 20px auto;
     border-radius: 8px; /* Léger arrondi des coins */
     z-index: 1; /* S'assure qu'il est en dessous du scanline body */
+    flex-shrink: 0;
 }
 
 #gameCanvas {
@@ -27,6 +28,149 @@
     max-width: 100%;
     /* Effet léger de grain ou de bruit sur le canvas pour le rendre moins "propre" */
     filter: saturate(1.1) contrast(1.1);
+}
+
+.game-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 1600px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.controls-panel {
+    width: min(100%, 640px);
+    background: linear-gradient(160deg, rgba(15, 15, 15, 0.85) 0%, rgba(48, 48, 48, 0.75) 100%);
+    border: 3px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow:
+        0 12px 25px rgba(0, 0, 0, 0.6),
+        inset 0 0 12px rgba(255, 255, 255, 0.05);
+    text-align: left;
+    backdrop-filter: blur(2px);
+}
+
+.controls-panel h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    margin-bottom: 16px;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.controls-panel__columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.controls-panel__column {
+    flex: 1 1 240px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.controls-panel__column h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: var(--accent-color-2);
+    text-transform: uppercase;
+}
+
+.controls-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.controls-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.keycap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 62px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 2px solid var(--accent-color-2);
+    border-radius: 6px;
+    box-shadow: inset 0 0 8px rgba(30, 144, 255, 0.4);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.action {
+    flex: 1;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.damage {
+    margin-left: 8px;
+    color: var(--accent-color-1);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+}
+
+.controls-buttons {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.control-button {
+    flex: 1 1 220px;
+    display: inline-block;
+    text-align: center;
+    padding: 14px 18px;
+    background: var(--accent-color-2);
+    color: var(--text-light);
+    text-decoration: none;
+    border-radius: 8px;
+    border: 3px solid var(--border-color);
+    appearance: none;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 1px;
+    box-shadow: 4px 4px 0 var(--secondary-color);
+    transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.control-button:hover {
+    transform: translateY(-3px);
+    background-color: var(--accent-color-1);
+    box-shadow: 6px 6px 0 var(--secondary-color);
+}
+
+.control-button:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 0 var(--secondary-color);
+}
+
+.control-button--primary {
+    background: var(--accent-color-1);
+}
+
+.control-button--primary:hover {
+    background: #ff5c1c;
 }
 
 /* HUD Styling - Design Arcade Classique */
@@ -173,5 +317,22 @@
 
     .timer {
         padding: 8px 16px;
+    }
+}
+
+@media (min-width: 1100px) {
+    .game-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    #game-container {
+        margin: 20px;
+    }
+
+    .controls-panel {
+        position: sticky;
+        top: 40px;
     }
 }

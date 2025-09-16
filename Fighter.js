@@ -1,6 +1,6 @@
 // js/game/entities/Fighter.js
 
-import { GRAVITY, GROUND_Y, GAME_WIDTH, FIGHTER_STATE, MAX_HEALTH, ATTACK_COOLDOWN_MS, DEBUG_OPTIONS } from './config.js';
+import { GRAVITY, GROUND_Y, GAME_WIDTH, FIGHTER_STATE, MAX_HEALTH, ATTACK_COOLDOWN_MS, DEBUG_OPTIONS, ATTACK_DAMAGE } from './config.js';
 import { getAsset } from './assets.js';
 import { FIGHTERS_DATA } from './fightersdata.js'; // Importer les données des combattants
 
@@ -10,7 +10,7 @@ const DEFAULT_ATTACK_HITBOX_CONFIG = {
         heightFactor: 0.3,
         offsetXFactor: 0.55,
         offsetYFactor: 0.45,
-        damage: 6,
+        damage: ATTACK_DAMAGE.LIGHT,
         startFrame: 0,
         endFrame: Number.POSITIVE_INFINITY,
     },
@@ -19,7 +19,7 @@ const DEFAULT_ATTACK_HITBOX_CONFIG = {
         heightFactor: 0.35,
         offsetXFactor: 0.52,
         offsetYFactor: 0.38,
-        damage: 10,
+        damage: ATTACK_DAMAGE.MEDIUM,
         startFrame: 0,
         endFrame: Number.POSITIVE_INFINITY,
     },
@@ -28,7 +28,7 @@ const DEFAULT_ATTACK_HITBOX_CONFIG = {
         heightFactor: 0.45,
         offsetXFactor: 0.5,
         offsetYFactor: 0.3,
-        damage: 14,
+        damage: ATTACK_DAMAGE.HEAVY,
         startFrame: 0,
         endFrame: Number.POSITIVE_INFINITY,
     },
